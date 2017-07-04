@@ -44,10 +44,10 @@ requests==2.6.2 \
     --hash=sha256:0577249d4b6c4b11fd97c28037e98664bfaa0559022fee7bcef6b752a106e505
 rsa==3.1.4 \
     --hash=sha256:e2b0b05936c276b1edd2e1525553233b666df9e29b5c3ba223eed738277c82a0
-https://github.com/mathjazz/silme/archive/v0.9.3.zip#egg=silme==0.9.3 \
-    --hash=sha256:9aa618f068ed71ecc8820dd7538aa39e499ed4ce61a0074edbcfcf1008da1d1c
-suds==0.4 \
-    --hash=sha256:d5524ae523bb9e09c57bcdbd1efae2c287d20603688ea31f6020ed180a489af0
+https://github.com/mastizada/silme/archive/python3.zip#egg=silme==0.9.3 \
+    --hash=sha256:9bd91733ed6d4fd72e12ec421267b58a3bf74313133138b70ec388756261fda5
+suds-py3==1.3.3.0 \
+    --hash=sha256:577d77a7c2090496954b0f300e6f4b0d117c459b0333deab10500679a9c99a18
 https://github.com/jbalogh/test-utils/archive/e42e031.zip#egg=test-utils \
     --hash=sha256:8a1dbd1c7ade85206ae770c9ce5f43081a098c95f994af113f6434e900559a67
 https://github.com/mathjazz/translate/archive/1.13.1.zip#egg=translate-toolkit==1.13.1 \
@@ -95,8 +95,8 @@ blinker==1.3 \
     --hash=sha256:6811010809262261e41ab7b92f3f6d23f35cf816fbec2bc05077992eebec6e2f
 lxml==3.4.4 \
     --hash=sha256:b3d362bac471172747cda3513238f115cbd6c5f8b8e6319bf6a97a7892724099
-mercurial==4.1.2 \
-    --hash=sha256:09415253fb409a77e19b9951532a3c22c4e07e74bab80652527064617daab194
+mercurial==4.2.1 \
+    --hash=sha256:d7d5572f5aa0797fbf2168440eaa51149df88645fe37af8b15fa660d9a8158a0
 django-sslify==0.2.7 \
     --hash=sha256:f6bfd21048c7dfc95b39659a3da77775d6db1c1f7a745805ccc6c6138f783b6d
 django-bulk-update==1.1.10 \
@@ -139,9 +139,10 @@ django-cors-headers==1.1.0 \
     --hash=sha256:fcd96e2be47c8eef34c650e007a6d546e19e7ee61041b89edbbbbe7619aa3987
 django-allauth==0.28.0 \
     --hash=sha256:135e42b2a6988de2e93729b9556ad6acf5bb8660ab5f3492d42aefc184a8aeb1
-python-openid==2.2.5 \
-    --hash=sha256:92c51c3ecec846cbec4aeff11f9ff47303d4a63f93b0e6ac0ec02a091fed70ef \
-    --hash=sha256:c2d133e47e0a7705c9272eef00d7a09c174f5bf17a127fed8e2c6499556cc782
+python3-openid==3.1.0 \
+    --hash=sha256:0086da6b6ef3161cfe50fb1ee5cceaf2cda1700019fda03c2c5c440ca6abe4fa
+defusedxml==0.5.0 \
+    --hash=sha256:702a91ade2968a82beb0db1e0766a6a273f33d4616a6ce8cde475d8e09853b20
 requests-oauthlib==0.6.1 \
     --hash=sha256:905306080ec0cc6b3c65c8101f471fccfdb9994c16dd116524fd3fc0790d46d7 \
     --hash=sha256:7c708e8e2a4aa6a905cf91f28420d75db37270e0ec8fc951915c098dd8bde53e
