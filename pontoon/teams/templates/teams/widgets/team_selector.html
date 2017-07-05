@@ -14,7 +14,7 @@
       {% for l in locales %}
         <li class="clearfix">
           <span class="language"
-            {% for key, value in l.serialize().iteritems() %}
+            {% for key, value in l.serialize().items() %}
               data-{{ key }}="{{ value }}"
             {% endfor %}
             {% if project and locale and locale == l %}

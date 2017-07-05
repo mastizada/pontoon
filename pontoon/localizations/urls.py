@@ -3,7 +3,7 @@ from django.conf.urls import url
 from pontoon.projects import views as projects_views
 from pontoon.teams import views as teams_views
 
-import views
+from pontoon.localizations import views
 
 urlpatterns = [
     # Localization page

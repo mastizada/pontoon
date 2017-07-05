@@ -73,10 +73,10 @@ class LangResource(ParsedResource):
                 elif isinstance(child, LangComment):
                     f.write(child.raw)
                 elif child == BLANK_LINE:
-                    f.write(u'\n')
+                    f.write('\n')
 
     def write_entity(self, f, entity):
-        f.write(u';{0}\n'.format(entity.source_string))
+        f.write(';{0}\n'.format(entity.source_string))
 
         translation = entity.strings.get(None, None)
         if translation is None:
@@ -91,13 +91,13 @@ class LangResource(ParsedResource):
             entity.tags.discard('ok')
 
         if entity.extra.get('tags'):
-            tags = [u'{{{tag}}}'.format(tag=t) for t in entity.tags]
-            translation = u'{translation} {tags}'.format(
+            tags = ['{{{tag}}}'.format(tag=t) for t in entity.tags]
+            translation = '{translation} {tags}'.format(
                 translation=translation,
-                tags=u' '.join(tags)
+                tags=' '.join(tags)
             )
 
-        f.write(u'{0}\n'.format(translation))
+        f.write('{0}\n'.format(translation))
 
 
 class LangVisitor(NodeVisitor):
@@ -115,7 +115,8 @@ class LangVisitor(NodeVisitor):
         translation = line_content line_ending
     """)
 
-    def visit_lang_file(self, node, children):
+    @staticmethod
+    def visit_lang_file(node, children):
         """
         Find comments that are associated with an entity and add them
         to the entity's comments list. Also assign order to entities.
@@ -136,14 +137,17 @@ class LangVisitor(NodeVisitor):
 
         return children
 
-    def visit_comment(self, node, (marker, content, end)):
+    def visit_comment(self, node, params):
+        (marker, content, end) = params
         return LangComment(node_text(marker), node_text(content), node_text(end))
 
-    def visit_blank_line(self, node, (whitespace, newline)):
+    def visit_blank_line(self, node, params):
+        (whitespace, newline) = params
         return BLANK_LINE
 
-    def visit_entity(self, node, (string, translation)):
+    def visit_entity(self, node, params):
         # Strip tags out of translation if they exist.
+        (string, translation) = params
         tags = []
         tag_matches = list(re.finditer(TAG_REGEX, translation))
         if tag_matches:
@@ -156,10 +160,12 @@ class LangVisitor(NodeVisitor):
 
         return LangEntity(string, translation, tags)
 
-    def visit_string(self, node, (marker, content, end)):
+    def visit_string(self, node, params):
+        (marker, content, end) = params
         return content.text.strip()
 
-    def visit_translation(self, node, (content, end)):
+    def visit_translation(self, node, params):
+        (content, end) = params
         return content.text.strip()
 
     def generic_visit(self, node, children):
@@ -175,7 +181,7 @@ def node_text(node):
     actually be a list of nodes due to repetition.
     """
     if node is None:
-        return u''
+        return ''
     elif isinstance(node, list):
         return ''.join([n.text for n in node])
     else:
@@ -191,7 +197,7 @@ def parse(path, source_path=None, locale=None):
     try:
         children = LangVisitor().parse(content)
     except (ParsimoniousParseError, VisitationError) as err:
-        wrapped = ParseError(u'Failed to parse {path}: {err}'.format(path=path, err=err))
-        raise wrapped, None, sys.exc_info()[2]  # NOQA
+        wrapped = ParseError('Failed to parse {path}: {err}'.format(path=path, err=err))
+        raise wrapped.with_traceback(sys.exc_info()[2])
 
     return LangResource(path, children)

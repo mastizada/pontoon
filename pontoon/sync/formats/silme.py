@@ -119,7 +119,7 @@ class SilmeResource(ParsedResource):
                 for comment in obj:
                     # Silme groups comments together, so we strip
                     # whitespace and split them up.
-                    lines = unicode(comment).strip().split('\n')
+                    lines = str(comment).strip().split('\n')
                     comments += [line.strip() for line in lines]
 
     @property
@@ -185,7 +185,7 @@ class SilmeResource(ParsedResource):
                     # No newline at end of file
                     continue
 
-                if type(line) == unicode and line.startswith('\n'):
+                if type(line) == str and line.startswith('\n'):
                     line = line[len('\n'):]
                     new_structure[pos] = line
                     if len(line) is 0:

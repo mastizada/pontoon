@@ -2,7 +2,10 @@ import cgi
 import datetime
 import json
 import urllib
-import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    import urlparse
 
 from django import template
 from django.contrib.humanize.templatetags import humanize

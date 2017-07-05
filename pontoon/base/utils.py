@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import codecs
 import functools
 import json
@@ -6,10 +7,13 @@ import os
 import pytz
 import re
 import requests
-import StringIO
 import tempfile
 import time
 import zipfile
+try:
+    import StringIO
+except ImportError:
+    from io import StringIO
 
 from datetime import datetime, timedelta
 from xml.sax.saxutils import (
@@ -168,7 +172,7 @@ def mark_placeables(text):
         # Placeable: mark
         if isinstance(item, BasePlaceable):
             class_name = item.__class__.__name__
-            placeable = unicode(item)
+            placeable = str(item)
 
             # CSS class used to mark the placeable
             css = {
@@ -203,7 +207,7 @@ def mark_placeables(text):
 
         # Not a placeable: skip
         else:
-            output += unicode(item).replace('<', '&lt;').replace('>', '&gt;')
+            output += str(item).replace('<', '&lt;').replace('>', '&gt;')
 
     return output
 

@@ -5,7 +5,10 @@ import logging
 import math
 import os.path
 import re
-import urllib
+try:
+    from urllib.parse import urlencode
+except ImportError:
+    from urllib import urlencode
 
 from collections import defaultdict
 from dirtyfields import DirtyFieldsMixin
@@ -32,10 +35,12 @@ from pontoon.sync.vcs.repositories import (
     PullFromRepositoryException,
 )
 from pontoon.base import utils
-from pontoon.db import IContainsCollate  # noqa
 from pontoon.sync import KEY_SEPARATOR
 
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 
 log = logging.getLogger('pontoon')
@@ -188,7 +193,7 @@ def user_profile_url(self):
 
 
 def user_gravatar_url(self, size):
-    email = hashlib.md5(self.email.lower()).hexdigest()
+    email = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
     data = {'s': str(size)}
 
     if not settings.DEBUG:
@@ -196,7 +201,7 @@ def user_gravatar_url(self, size):
         data['d'] = settings.SITE_URL + static('img/anon' + append + '.jpg')
 
     return '//www.gravatar.com/avatar/{email}?{data}'.format(
-        email=email, data=urllib.urlencode(data))
+        email=email, data=urlencode(data))
 
 
 @property
@@ -615,7 +620,7 @@ class Locale(AggregatedStats):
 
     @property
     def nplurals(self):
-        return len(self.cldr_id_list())
+        return len(list(self.cldr_id_list()))
 
     @property
     def projects_permissions(self):
@@ -1432,8 +1437,7 @@ class Repository(models.Model):
             current_revisions['single_locale'] = get_revision(
                 self.type,
                 self.checkout_path
-            )
-
+            ).decode('utf-8')
         self.last_synced_revisions = current_revisions
         self.save(update_fields=['last_synced_revisions'])
 

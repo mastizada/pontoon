@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.views.generic import RedirectView
 
-import views
+from pontoon.projects import views
 
 urlpatterns = [
     # Legacy: Redirect to /projects

@@ -68,7 +68,7 @@ def ajax_resources(request, code, slug):
         pages[page.name] = latest_page_translatedresource
 
     translatedresources = {s.resource.path: s for s in translatedresources_qs}
-    translatedresources = dict(translatedresources.items() + pages.items())
+    translatedresources.update(pages)
     parts = locale.parts_stats(project)
 
     for part in parts:
