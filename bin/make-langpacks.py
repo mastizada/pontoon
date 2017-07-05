@@ -71,14 +71,14 @@ def pull(url, target):
 
     # Clone
     else:
-        write(unicode(error))
+        write(str(error))
         write('Clone instead.')
 
         code, output, error = execute(['hg', 'clone', url, target])
         if code == 0:
             write('Repository at ' + url + ' cloned.')
         else:
-            write(unicode(error))
+            write(str(error))
 
 
 write('Building langpacks initiated.')

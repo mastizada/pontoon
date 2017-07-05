@@ -49,7 +49,7 @@ class NoSpamTests(TestCase):
     """Tests related to the no_spam template filter."""
 
     def test_unicode(self):
-        assert_equal(unicode(nospam(u'<łążźćń>')), u'&lt;łążźćń&gt;')
+        assert_equal(str(nospam(u'<łążźćń>')), '&lt;łążźćń&gt;')
 
     def test_escape(self):
         assert_equal(str(nospam('<>\'"@&')), '&lt;&gt;&quot;&quot;&#64;&amp;')

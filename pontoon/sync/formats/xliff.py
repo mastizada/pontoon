@@ -24,7 +24,7 @@ class XLIFFEntity(VCSTranslation):
 
     @property
     def source_string(self):
-        return unicode(self.unit.get_rich_source()[0])
+        return str(self.unit.get_rich_source()[0])
 
     @property
     def source_string_plural(self):
@@ -49,7 +49,7 @@ class XLIFFEntity(VCSTranslation):
 
     @property
     def target_string(self):
-        return unicode(self.unit.get_rich_target()[0])
+        return str(self.unit.get_rich_target()[0])
 
     @target_string.setter
     def target_string(self, value):
