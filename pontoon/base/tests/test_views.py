@@ -424,13 +424,13 @@ class TMXFileGeneratorTests(TestCase):
         """
 
         with open(os.path.join(self.samples_root, file_path), 'rU') as f:
-            return f.read().decode('utf-8')
+            return f.read()
 
     def test_empty_tmx_file(self):
         tmx_contents = build_translation_memory_file(
-            datetime(2010, 01, 01),
+            datetime(2010, 1, 1),
             'sl',
-            ()
+            []
         )
         assert_xml(
             ''.join(tmx_contents).encode('utf-8'),
@@ -440,9 +440,9 @@ class TMXFileGeneratorTests(TestCase):
 
     def test_valid_entries(self):
         tmx_contents = build_translation_memory_file(
-            datetime(2010, 01, 01),
+            datetime(2010, 1, 1),
             'sl',
-            (
+            [
                 ('aa/bb/ccc', 'xxx', 'source string', 'translation', 'Pontoon App', 'pontoon'),
 
                 # Test escape of characters
@@ -454,7 +454,7 @@ class TMXFileGeneratorTests(TestCase):
                 # Handle html content
                 ('aa/bb/ccc', 'xxx', u'<p>source <strong>string</p>', u'<p>translation łążśźć</p>', 'pontoon', 'pontoon'),
 
-            )
+            ]
         )
         assert_xml(
             ''.join(tmx_contents).encode('utf-8'),
