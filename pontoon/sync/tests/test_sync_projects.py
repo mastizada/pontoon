@@ -1,4 +1,7 @@
-import StringIO
+try:
+    from io import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 from django.core.management.base import CommandError
 
@@ -20,7 +23,7 @@ class CommandTests(TestCase):
         self.command.no_commit = False
         self.command.no_pull = False
         self.command.force = False
-        self.command.stderr = StringIO.StringIO()
+        self.command.stderr = StringIO()
 
         Project.objects.filter(slug='pontoon-intro').delete()
 

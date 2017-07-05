@@ -11,9 +11,9 @@ import tempfile
 import time
 import zipfile
 try:
-    import StringIO
-except ImportError:
     from io import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 from datetime import datetime, timedelta
 from xml.sax.saxutils import (
@@ -393,7 +393,7 @@ def get_download_content(slug, code, part):
     resources = Resource.objects.filter(project=project, translatedresources__locale=locale)
     isZipable = 1 < len(resources) < 10
     if isZipable:
-        s = StringIO.StringIO()
+        s = StringIO()
         zf = zipfile.ZipFile(s, "w")
 
     # Download a single file if project has 1 or >= 10 resources
