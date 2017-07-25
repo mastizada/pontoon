@@ -11,6 +11,7 @@ except ImportError:
     from urllib import urlencode
 
 from collections import defaultdict
+from functools import reduce
 from dirtyfields import DirtyFieldsMixin
 
 from django.conf import settings
