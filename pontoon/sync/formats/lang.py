@@ -9,6 +9,8 @@ from parsimonious.exceptions import ParseError as ParsimoniousParseError, Visita
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
 
+from six import reraise
+
 from pontoon.sync.exceptions import ParseError
 from pontoon.sync.formats.base import ParsedResource
 from pontoon.sync.vcs.models import VCSTranslation
@@ -197,7 +199,7 @@ def parse(path, source_path=None, locale=None):
     try:
         children = LangVisitor().parse(content)
     except (ParsimoniousParseError, VisitationError) as err:
-        wrapped = ParseError('Failed to parse {path}: {err}'.format(path=path, err=err))
-        raise wrapped.with_traceback(sys.exc_info()[2])
+        wrapped = ParseError(u'Failed to parse {path}: {err}'.format(path=path, err=err))
+        reraise(err, wrapped, sys.exc_info()[2])
 
     return LangResource(path, children)

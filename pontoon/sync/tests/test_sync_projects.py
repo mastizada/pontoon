@@ -1,8 +1,4 @@
-try:
-    from io import StringIO
-except ImportError:
-    from StringIO import StringIO
-
+from six import StringIO
 from django.core.management.base import CommandError
 
 from django_nose.tools import assert_equal, assert_false, assert_raises
