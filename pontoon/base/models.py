@@ -5,10 +5,8 @@ import logging
 import math
 import os.path
 import re
-try:
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlencode
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.parse import urlparse
 
 from collections import defaultdict
 from functools import reduce
@@ -37,11 +35,6 @@ from pontoon.sync.vcs.repositories import (
 )
 from pontoon.base import utils
 from pontoon.sync import KEY_SEPARATOR
-
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
 
 
 log = logging.getLogger('pontoon')

@@ -1,7 +1,7 @@
 import logging
 import requests
-import urllib
 import xml.etree.ElementTree as ET
+from six.moves.urllib.parse import quote
 
 from collections import defaultdict
 from django.conf import settings
@@ -200,7 +200,7 @@ def amagama(request):
         return HttpResponseBadRequest('Bad Request: {error}'.format(error=e))
 
     try:
-        text = urllib.quote(text.encode('utf-8'))
+        text = quote(text.encode('utf-8'))
     except KeyError as e:
         return HttpResponseBadRequest('Bad Request: {error}'.format(error=e))
 
@@ -233,7 +233,7 @@ def transvision(request):
         return HttpResponseBadRequest('Bad Request: {error}'.format(error=e))
 
     try:
-        text = urllib.quote(text.encode('utf-8'))
+        text = quote(text.encode('utf-8'))
     except KeyError as e:
         return HttpResponseBadRequest('Bad Request: {error}'.format(error=e))
 

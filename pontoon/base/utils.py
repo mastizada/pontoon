@@ -10,10 +10,7 @@ import requests
 import tempfile
 import time
 import zipfile
-try:
-    from io import StringIO
-except ImportError:
-    from StringIO import StringIO
+from six import StringIO
 
 from datetime import datetime, timedelta
 from xml.sax.saxutils import (

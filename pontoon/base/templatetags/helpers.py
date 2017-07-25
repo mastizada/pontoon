@@ -1,11 +1,9 @@
 import cgi
 import datetime
 import json
-import urllib
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    import urlparse
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import quote_plus
 
 from django import template
 from django.contrib.humanize.templatetags import humanize
@@ -80,9 +78,9 @@ def urlparams(url_, hash=None, **query):
 def _urlencode(items):
     """A Unicode-safe URLencoder."""
     try:
-        return urllib.urlencode(items)
+        return urlencode(items)
     except UnicodeEncodeError:
-        return urllib.urlencode([(k, smart_str(v)) for k, v in items])
+        return urlencode([(k, smart_str(v)) for k, v in items])
 
 
 @library.filter
@@ -90,7 +88,7 @@ def urlencode(txt):
     """Url encode a path."""
     if isinstance(txt, unicode):
         txt = txt.encode('utf-8')
-    return urllib.quote_plus(txt)
+    return quote_plus(txt)
 
 
 @library.global_function
