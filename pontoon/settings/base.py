@@ -61,6 +61,7 @@ STATIC_HOST = os.environ.get('STATIC_HOST', '')
 
 SESSION_COOKIE_HTTPONLY = os.environ.get('SESSION_COOKIE_HTTPONLY', 'True') != 'False'
 SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'True') != 'False'
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'True') != 'False'
 
 APP_URL_KEY = 'APP_URL'
 
@@ -144,7 +145,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 
     # Third-party apps, patches, fixes
-    'commonware.response.cookies',
     'django_jinja',
     'django_nose',
     'pipeline',

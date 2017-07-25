@@ -83,6 +83,7 @@ Installation
       DJANGO_DEBUG=True
       DATABASE_URL=postgres://pontoon:asdf@localhost/pontoon
       SESSION_COOKIE_SECURE=False
+      CSRF_COOKIE_SECURE=False
       SITE_URL=http://localhost:8000
       FXA_CLIENT_ID=2651b9211a44b7b2
       FXA_SECRET_KEY=a3cafccbafe39db54f2723f8a6f804c337e362950f197b5b33050d784129d570
