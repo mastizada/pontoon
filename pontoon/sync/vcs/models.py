@@ -3,6 +3,7 @@ Models for working with remote translation data stored in a VCS.
 """
 import logging
 import os
+import scandir
 import shutil
 
 from itertools import chain
@@ -15,10 +16,11 @@ from pontoon.base import MOZILLA_REPOS
 from pontoon.sync.exceptions import ParseError
 from pontoon.sync.utils import (
     is_hidden,
-    directory_contains_resources,
     is_resource,
     is_asymmetric_resource,
+    get_parent_directory,
     uses_undercore_as_separator,
+    directory_contains_resources,
     locale_directory_path,
     locale_to_source_path,
     source_to_locale_path,
@@ -207,17 +209,19 @@ class VCSProject(object):
         Create locale directory, if not in repository yet.
         """
         locale_directory_paths = {}
+        parent_directories = set()
 
         for locale in self.locales:
             try:
                 locale_directory_paths[locale.code] = locale_directory_path(
-                    self.checkout_path, locale.code
+                    self.checkout_path, locale.code, parent_directories
                 )
+                parent_directory = get_parent_directory(locale_directory_paths[locale.code])
 
             except IOError:
                 if not self.db_project.has_multi_locale_repositories:
                     source_directory = self.source_directory_path
-                    parent_directory = os.path.abspath(os.path.join(source_directory, os.pardir))
+                    parent_directory = get_parent_directory(source_directory)
 
                     locale_code = locale.code
                     if uses_undercore_as_separator(parent_directory):
@@ -233,7 +237,7 @@ class VCSProject(object):
                     else:
                         shutil.copytree(source_directory, locale_directory)
 
-                        for root, dirnames, filenames in os.walk(locale_directory):
+                        for root, dirnames, filenames in scandir.walk(locale_directory):
                             for filename in filenames:
                                 path = os.path.join(root, filename)
                                 if is_resource(filename):
@@ -248,6 +252,7 @@ class VCSProject(object):
                         'Directory for locale `{0}` not found'.format(locale.code)
                     )
 
+            parent_directories.add(parent_directory)
 
         return locale_directory_paths
 
@@ -325,8 +330,13 @@ class VCSProject(object):
         directory names get higher scores, as do directories with
         formats that only used for source strings.
         """
+        # If source repository explicitly marked
+        source_repository = self.db_project.source_repository
+        if source_repository.source_repo:
+            return source_repository.checkout_path
+
         possible_sources = []
-        for root, dirnames, filenames in os.walk(self.checkout_path):
+        for root, dirnames, filenames in scandir.walk(self.checkout_path):
             for dirname in dirnames:
                 if dirname in self.SOURCE_DIR_NAMES:
                     score = self.SOURCE_DIR_SCORES[dirname]
@@ -361,7 +371,7 @@ class VCSProject(object):
         List of paths for all supported resources found within the given
         path.
         """
-        for root, dirnames, filenames in os.walk(path):
+        for root, dirnames, filenames in scandir.walk(path):
             if is_hidden(root):
                 continue
 

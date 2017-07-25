@@ -29,6 +29,8 @@ Contents
    :maxdepth: 2
 
    dev/install
+   dev/install-docker
+   dev/fluent
    dev/workflow
    dev/sync
    admin/deployment

@@ -5,9 +5,11 @@ import copy
 import logging
 import os
 
-from fluent.syntax import ast
-from fluent.syntax import parser
-from fluent.syntax import serializer
+from fluent.syntax import (
+    ast,
+    FluentParser,
+    FluentSerializer
+)
 
 from pontoon.sync import SyncError
 from pontoon.sync.formats.base import ParsedResource
@@ -15,6 +17,9 @@ from pontoon.sync.vcs.models import VCSTranslation
 
 log = logging.getLogger(__name__)
 
+
+parser = FluentParser()
+serializer = FluentSerializer()
 
 class FTLEntity(VCSTranslation):
     """
@@ -73,7 +78,14 @@ class FTLResource(ParsedResource):
         for obj in self.structure.body:
             if type(obj) == ast.Message:
                 key = obj.id.name
-                translation = serializer.serialize_message(obj)
+                translation = serializer.serialize_entry(obj)
+
+                # If syncing locale file
+                if source_resource:
+                    split = translation.split('\n' + key + ' = ')
+                    if len(split) > 1:
+                        serialized_comment = split[0] + '\n'
+                        translation = translation[len(serialized_comment):]
 
                 self.entities[key] = FTLEntity(
                     key,

@@ -1,5 +1,8 @@
 /* Public functions used across different files */
 var Pontoon = (function (my) {
+  const fluentParser = new FluentSyntax.FluentParser({ withSpans: false });
+  const fluentSerializer = new FluentSyntax.FluentSerializer();
+
   return $.extend(true, my, {
     fluent: {
 
@@ -16,13 +19,13 @@ var Pontoon = (function (my) {
             isFTLplural = entity.isFTLplural,
             translation = translation || entity.translation[0],
             isTranslated = translation.pk,
-            entity_ast = FluentSyntax.parse(entity.original).body[0],
+            entity_ast = fluentParser.parseEntry(entity.original),
             entityAttributes = [],
             id, value;
 
         var attributes = entity_ast.attributes;
         if (isTranslated) {
-          var translation_ast = FluentSyntax.parse(translation.string).body[0];
+          var translation_ast = fluentParser.parseEntry(translation.string);
           attributes = translation_ast.attributes;
         }
 
@@ -46,10 +49,10 @@ var Pontoon = (function (my) {
             $('#ftl-area .main-value ul')
               .append(
                 '<li class="clearfix">' +
-                  '<label class="id built-in" for="' + this + '">' +
+                  '<label class="id built-in" for="ftl-id-' + this + '">' +
                     '<span>' + this + ' (e.g. </span><span class="stress">' + example + '</span>)<sub class="fa fa-remove remove" title="Remove"></sub>' +
                   '</label>' +
-                  '<input class="value" id="' + this + '" type="text" value="' + value + '">' +
+                  '<input class="value" id="ftl-id-' + this + '" type="text" value="' + value + '">' +
                 '</li>');
           });
 
@@ -57,7 +60,7 @@ var Pontoon = (function (my) {
         }
 
         // Attributes
-        if (!attributes) {
+        if (!(attributes && attributes.length)) {
           return;
         }
 
@@ -71,10 +74,10 @@ var Pontoon = (function (my) {
             maxlength = '1';
             input = '<div class="accesskeys"></div>';
           }
-          input += '<input class="value" id="' + id + '" type="text" value="' + value + '" maxlength="' + maxlength + '">';
+          input += '<input class="value" id="ftl-id-' + id + '" type="text" value="' + value + '" maxlength="' + maxlength + '">';
 
           if ($.inArray(id, [entityAttributes])) {
-            label = '<label class="id" for="' + id + '">' +
+            label = '<label class="id" for="ftl-id-' + id + '">' +
               '<span>' + id + '</span>' +
             '</label>';
 
@@ -179,7 +182,7 @@ var Pontoon = (function (my) {
           return;
         }
 
-        var ast = FluentSyntax.parse(entity.original).body[0],
+        var ast = fluentParser.parseEntry(entity.original),
             original = '';
 
         function renderOriginal(obj) {
@@ -275,7 +278,8 @@ var Pontoon = (function (my) {
           translation = ' = ' + translation;
         }
 
-        return entity.key + translation;
+        var content = entity.key + translation;
+        return fluentSerializer.serializeEntry(fluentParser.parseEntry(content));
       },
 
 
@@ -293,7 +297,7 @@ var Pontoon = (function (my) {
             return response;
           }
 
-          ast = FluentSyntax.parse(source).body[0];
+          ast = fluentParser.parseEntry(source);
 
           if (ast.value) {
             response = this.serializePlaceables(ast.value.elements);
@@ -301,13 +305,13 @@ var Pontoon = (function (my) {
           // Attributes
           } else {
             var attributes = ast.attributes;
-            if (attributes) {
+            if (attributes && attributes.length) {
               response = attributes[0].value.elements[0].value;
             }
           }
 
           // Plurals
-          if (ast.value && ast.value.elements && ast.value.elements[0].expression && ast.value.elements[0].variants) {
+          if (ast.value && ast.value.elements && ast.value.elements.length && ast.value.elements[0].expression && ast.value.elements[0].variants) {
             var variants = ast.value.elements[0].variants,
                 isFTLplural = variants.every(function(element) {
                   var key = element.key.name,
@@ -324,7 +328,7 @@ var Pontoon = (function (my) {
           }
 
           // Mark complex strings
-          if (ast.attributes || (ast.value && ast.value.elements && ast.value.elements[0].expression && ast.value.elements[0].variants.length > 1)) {
+          if (ast.attributes && ast.attributes.length || (ast.value && ast.value.elements && ast.value.elements.length && ast.value.elements[0].expression && ast.value.elements[0].variants.length > 1)) {
             object.isComplexFTL = true;
 
           // Update entity and translation objects
@@ -393,11 +397,11 @@ $(function() {
       $(this).addClass('active');
     }
 
-    $('#accesskey').val($('.accesskeys div.active').html());
+    $('#ftl-id-accesskey').val($('.accesskeys div.active').html());
   });
 
   // Select access key via input
-  $('#ftl-area .attributes').on('keyup', '#accesskey', function() {
+  $('#ftl-area .attributes').on('keyup', '#ftl-id-accesskey', function() {
     var accesskey = $(this).val().toUpperCase();
 
     if (accesskey) {
